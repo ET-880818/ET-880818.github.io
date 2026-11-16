@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Esunny 易盛系统操作手册：开户资料录入、审核与日常维护操作规范。">
+<title>2.1 客户信息 · 易盛系统操作手册</title>
+<style>
+/* ============================================================
+   Esunny 易盛系统操作手册 — Overhaul
+   Swiss grid × data-ink. Zero shadow, zero gradient, radius 2px.
+   ============================================================ */
+
+:root{
+  --paper:#FBFAF7;
+  --surface:#FFFFFF;
+  --ink:#16181C;
+  --ink-2:#5A6068;
+  --ink-3:#8A8F98;
+  --accent:#0B4A8F;
+  --accent-soft:#EEF3FA;
+  --accent-line:#C6D6E8;
+  --rule:#E3DFD4;
+  --rule-2:#EFECE3;
+  --rule-strong:#C9C3B4;
+  --red:#A6300E;
+  --red-soft:#FBF1EC;
+  --amber:#8A6100;
+  --amber-soft:#FDF8E9;
+  --slate:#3E4A5C;
+  --slate-soft:#F2F4F7;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Consolas,"Liberation Mono",monospace;
+  --sans:"PingFang SC","Microsoft YaHei","Source Han Sans SC","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+  --topbar:58px;
+  --toc-w:274px;
+  --measure:880px;
+  --ease:cubic-bezier(.2,0,0,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- reading progress ---------- */
+#progress{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:var(--accent);
+  z-index:120;
+  transition:width .08s linear;
+}
+
+/* ---------- topbar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar);
+  display:flex;align-items:center;gap:20px;
+  padding:0 24px;
+  background:rgba(251,250,247,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+  z-index:100;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;}
+.brand-mark{
+  width:26px;height:26px;flex:none;
+  display:grid;place-items:center;
+  background:var(--accent);color:#fff;
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;
+  border-radius:2px;
+}
+.brand-name{
+  font-size:14.5px;font-weight:600;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.brand-sub{
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);
+  padding-left:10px;margin-left:2px;border-left:1px solid var(--rule);
+  white-space:nowrap;
+}
+.topbar-spacer{flex:1;}
+
+.search-trigger{
+  display:flex;align-items:center;gap:10px;
+  height:34px;padding:0 10px 0 12px;
+  min-width:290px;
+  border:1px solid var(--rule-strong);
+  border-radius:2px;
+  background:var(--surface);
+  color:var(--ink-3);
+  font-family:inherit;font-size:13px;
+  cursor:pointer;
+  transition:border-color .12s var(--ease),background .12s var(--ease);
+}
+.search-trigger:hover{border-color:var(--accent-line);background:var(--accent-soft);}
+.search-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+.search-trigger .st-label{flex:1;text-align:left;}
+kbd{
+  font-family:var(--mono);font-size:10.5px;line-height:1;
+  padding:4px 5px;border:1px solid var(--rule-strong);border-radius:2px;
+  background:var(--paper);color:var(--ink-2);
+}
+.toc-toggle{display:none;}
+
+/* ---------- shell ---------- */
+.shell{
+  display:grid;
+  grid-template-columns:var(--toc-w) minmax(0,1fr);
+  max-width:1560px;
+  margin:0 auto;
+  padding-top:var(--topbar);
+}
+
+/* ---------- table of contents ---------- */
+.toc{
+  position:sticky;top:var(--topbar);
+  align-self:start;
+  height:calc(100vh - var(--topbar));
+  overflow-y:auto;
+  padding:28px 18px 40px 24px;
+  border-right:1px solid var(--rule);
+  scrollbar-width:thin;
+}
+.toc-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:14px;
+}
+.toc-head span:first-child{
+  font-size:11px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.toc-head .toc-count{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);}
+
+.toc-chapter{margin-bottom:2px;}
+.toc-l1{
+  display:flex;align-items:baseline;gap:9px;
+  padding:7px 8px;
+  font-size:13.5px;font-weight:600;color:var(--ink);
+  text-decoration:none;
+  border-radius:2px;
+  transition:background .1s var(--ease);
+}
+.toc-l1 .num{
+  font-family:var(--mono);font-size:10.5px;font-weight:700;
+  color:var(--ink-3);letter-spacing:.02em;
+  transition:color .1s var(--ease);
+}
+.toc-l1:hover{background:var(--rule-2);}
+.toc-l1.active{color:var(--accent);}
+.toc-l1.active .num{color:var(--accent);}
+
+.toc-l2{
+  display:block;
+  padding:4px 8px 4px 27px;
+  font-size:12.5px;line-height:1.5;color:var(--ink-2);
+  text-decoration:none;
+  border-left:2px solid transparent;
+  margin-left:12px;
+  transition:color .1s var(--ease),border-color .1s var(--ease),background .1s var(--ease);
+}
+.toc-l2:hover{color:var(--ink);background:var(--rule-2);}
+.toc-l2.active{
+  color:var(--accent);font-weight:600;
+  border-left-color:var(--accent);
+  background:var(--accent-soft);
+}
+
+.toc-foot{
+  margin-top:22px;padding-top:16px;
+  border-top:1px solid var(--rule);
+  font-size:11px;color:var(--ink-3);
+  line-height:1.7;
+}
+.toc-foot .ver{
+  font-family:var(--mono);font-size:12px;color:var(--ink-2);
+  display:block;margin-top:3px;
+}
+
+/* ---------- main / article ---------- */
+main{
+  padding:44px 56px 140px;
+  min-width:0;
+}
+.article{max-width:var(--measure);}
+
+/* ---------- document head ---------- */
+.doc-head{margin-bottom:52px;}
+.doc-eyebrow{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:14px;
+}
+h1{
+  font-size:clamp(30px,3.1vw,40px);
+  line-height:1.18;
+  letter-spacing:-.01em;
+  font-weight:700;
+  margin:0 0 22px;
+  text-wrap:balance;
+}
+
+.meta-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  margin:0 0 34px;
+  border-top:1px solid var(--rule-strong);
+  border-bottom:1px solid var(--rule);
+}
+.meta-cell{
+  padding:13px 18px 13px 0;
+  border-right:1px solid var(--rule-2);
+}
+.meta-cell:last-child{border-right:none;}
+.meta-cell dt{
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:4px;
+}
+.meta-cell dd{
+  margin:0;font-size:13.5px;color:var(--ink);line-height:1.55;
+}
+
+/* chapter overview cards */
+.chapter-nav{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  margin-bottom:10px;
+}
+.chapter-card{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:18px 20px;
+  background:var(--surface);
+  text-decoration:none;color:inherit;
+  transition:background .12s var(--ease);
+}
+.chapter-card:hover{background:var(--accent-soft);}
+.chapter-card .cc-num{
+  font-family:var(--mono);font-size:22px;font-weight:700;
+  color:var(--rule-strong);line-height:1;
+  transition:color .12s var(--ease);
+}
+.chapter-card:hover .cc-num{color:var(--accent);}
+.chapter-card .cc-body{min-width:0;display:block;}
+.chapter-card .cc-title{
+  display:block;
+  font-size:14px;font-weight:600;line-height:1.45;
+  margin-bottom:2px;
+}
+.chapter-card .cc-desc{
+  display:block;
+  font-size:12px;color:var(--ink-2);line-height:1.55;
+}
+
+/* ---------- headings ---------- */
+h2{
+  position:relative;
+  font-size:26px;font-weight:700;line-height:1.3;
+  letter-spacing:-.005em;
+  margin:76px 0 8px;
+  padding-top:26px;
+  border-top:2px solid var(--ink);
+  scroll-margin-top:calc(var(--topbar) + 20px);
+  text-wrap:balance;
+}
+h2:first-of-type{margin-top:58px;}
+h2 .h2-num{
+  display:block;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.14em;color:var(--accent);
+  margin-bottom:7px;
+}
+h2 + p{margin-top:14px;}
+
+h3{
+  font-size:19px;font-weight:700;line-height:1.4;
+  margin:54px 0 16px;
+  padding-bottom:9px;
+  border-bottom:1px solid var(--rule);
+  scroll-margin-top:calc(var(--topbar) + 16px);
+  display:flex;align-items:baseline;gap:10px;
+  text-wrap:balance;
+}
+h3 .h3-num{
+  font-family:var(--mono);font-size:12.5px;font-weight:700;
+  color:var(--accent);flex:none;
+}
+
+h4{
+  font-size:14.5px;font-weight:700;
+  margin:34px 0 12px;
+  color:var(--ink);
+  display:flex;align-items:center;gap:9px;
+  scroll-margin-top:calc(var(--topbar) + 16px);
+}
+/* status badge on group headings */
+h4 .badge{flex:none;}
+h4.badge-required::before{
+  content:"";width:3px;height:15px;flex:none;
+  background:var(--red);border-radius:1px;
+}
+h4.badge-conditional::before{
+  content:"";width:3px;height:15px;flex:none;
+  background:var(--amber);border-radius:1px;
+}
+h4.badge-default::before{
+  content:"";width:3px;height:15px;flex:none;
+  background:var(--slate);border-radius:1px;
+}
+
+.badge{
+  display:inline-block;
+  font-size:10.5px;font-weight:600;letter-spacing:.06em;
+  padding:2px 7px;border-radius:2px;
+  line-height:1.5;white-space:nowrap;
+  border:1px solid transparent;
+}
+.badge--required{background:var(--red-soft);color:var(--red);border-color:#EFD3C8;}
+.badge--conditional{background:var(--amber-soft);color:var(--amber);border-color:#EBDDB5;}
+.badge--default{background:var(--slate-soft);color:var(--slate);border-color:#D8DEE6;}
+
+/* anchor link */
+.anchor{
+  margin-left:4px;
+  font-family:var(--mono);font-size:13px;font-weight:400;
+  color:var(--ink-3);text-decoration:none;
+  opacity:0;transition:opacity .12s var(--ease),color .12s var(--ease);
+  flex:none;
+}
+h2:hover .anchor,h3:hover .anchor,.anchor:focus-visible{opacity:1;}
+.anchor:hover{color:var(--accent);}
+
+/* ---------- body copy ---------- */
+p{margin:13px 0;}
+strong{font-weight:600;}
+a{color:var(--accent);}
+
+ul,ol{margin:13px 0;padding-left:0;list-style:none;}
+ul li,ol li{
+  position:relative;
+  padding-left:20px;
+  margin:7px 0;
+}
+ul li::before{
+  content:"";position:absolute;left:4px;top:.72em;
+  width:5px;height:1px;background:var(--rule-strong);
+}
+ol{counter-reset:li;}
+ol li{counter-increment:li;}
+ol li::before{
+  content:counter(li)".";
+  position:absolute;left:0;top:0;
+  font-family:var(--mono);font-size:12px;
+  color:var(--ink-3);
+}
+
+code{
+  font-family:var(--mono);font-size:.88em;
+  background:var(--accent-soft);
+  color:var(--accent);
+  padding:1.5px 5px;
+  border-radius:2px;
+  border:1px solid var(--accent-line);
+  white-space:nowrap;
+}
+
+mark{
+  background:var(--amber-soft);
+  color:var(--amber);
+  padding:1px 5px;
+  border-radius:2px;
+  font-weight:600;
+  box-shadow:inset 2px 0 0 var(--amber);
+  padding-left:7px;
+}
+
+/* ---------- callouts (unified semantic blocks) ---------- */
+.callout{
+  position:relative;
+  margin:20px 0;
+  padding:14px 18px 14px 18px;
+  border:1px solid var(--rule);
+  border-left:3px solid var(--slate);
+  border-radius:2px;
+  background:var(--surface);
+  font-size:14px;
+  line-height:1.72;
+}
+.callout__label{
+  display:block;
+  font-size:10.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+  color:var(--slate);
+}
+.callout--note{border-left-color:var(--amber);background:var(--amber-soft);border-color:#EDE3C8;}
+.callout--note .callout__label{color:var(--amber);}
+.callout--risk{border-left-color:var(--red);background:var(--red-soft);border-color:#EFD9CE;}
+.callout--risk .callout__label{color:var(--red);}
+.callout--tip{border-left-color:var(--slate);background:var(--slate-soft);border-color:#DDE3EA;}
+.callout--tip .callout__label{color:var(--slate);}
+.callout p:first-of-type{margin-top:0;}
+.callout p:last-child{margin-bottom:0;}
+.callout + .callout{margin-top:12px;}
+
+/* ---------- field table (unified) ---------- */
+.table-wrap{
+  margin:16px 0 22px;
+  border:1px solid var(--rule-strong);
+  border-radius:2px;
+  background:var(--surface);
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+table{
+  border-collapse:collapse;
+  width:100%;
+  font-size:13.5px;
+  line-height:1.65;
+}
+thead th{
+  background:#F4F2EC;
+  font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-2);
+  text-align:left;
+  padding:9px 14px;
+  border-bottom:1px solid var(--rule-strong);
+  white-space:nowrap;
+  position:sticky;top:0;z-index:2;
+}
+tbody td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--rule-2);
+  vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{transition:background .1s var(--ease);}
+tbody tr:hover td{background:#FCFBF7;}
+
+/* first column = field name, pinned when scrolling horizontally */
+tbody td:first-child{
+  font-weight:600;
+  color:var(--ink);
+  position:sticky;left:0;
+  background:var(--surface);
+  border-right:1px solid var(--rule-2);
+  min-width:130px;
+}
+tbody tr:hover td:first-child{background:#FCFBF7;}
+thead th:first-child{position:sticky;left:0;z-index:3;background:#F4F2EC;}
+
+/* required marker (red) on field name */
+td.req{color:var(--red);}
+td.req::after{
+  content:"必填";
+  display:inline-block;
+  margin-left:7px;
+  font-size:9.5px;font-weight:600;letter-spacing:.04em;
+  color:var(--red);
+  background:var(--red-soft);
+  border:1px solid #EFD3C8;
+  border-radius:2px;
+  padding:0 4px;
+  vertical-align:1.5px;
+}
+
+/* meta tables: label/value pairs keep natural width */
+table.kv td:first-child{white-space:nowrap;}
+
+/* ---------- mapping rows (relation-type codes) ---------- */
+.map-row{
+  display:grid;
+  grid-template-columns:96px 18px 30px minmax(0,1fr);
+  align-items:baseline;
+  gap:6px;
+  padding:5px 0;
+  border-bottom:1px dashed var(--rule);
+}
+.map-row:last-child{border-bottom:none;}
+.map-name{font-size:13px;color:var(--ink-2);}
+.map-arrow{color:var(--rule-strong);font-family:var(--mono);font-size:12px;}
+.map-code{
+  font-family:var(--mono);font-size:11.5px;font-weight:700;
+  text-align:center;
+  color:#fff;background:var(--accent);
+  border-radius:2px;padding:1px 0;
+}
+.map-sys{font-size:12.5px;color:var(--ink-2);}
+
+/* ---------- step block ---------- */
+.step{
+  margin:18px 0 22px;
+  padding:16px 20px;
+  background:var(--surface);
+  border:1px solid var(--rule);
+  border-left:2px solid var(--accent);
+  border-radius:2px;
+  font-size:14px;
+  line-height:2.05;
+}
+.step strong:first-child,
+.step > strong:only-child{
+  display:inline-block;
+  min-width:20px;
+}
+
+/* ---------- figures ---------- */
+figure{margin:20px 0;}
+figure img{
+  display:block;
+  max-width:100%;
+  height:auto;
+  border:1px solid var(--rule-strong);
+  border-radius:2px;
+  background:var(--surface);
+  cursor:zoom-in;
+  transition:border-color .12s var(--ease);
+}
+figure img:hover{border-color:var(--accent-line);}
+figcaption{
+  margin-top:7px;
+  font-size:11.5px;
+  color:var(--ink-3);
+  font-family:var(--mono);
+  letter-spacing:.02em;
+}
+
+/* step number badges — unified with ordered lists */
+.step-num{
+  display:inline-grid;place-items:center;
+  width:19px;height:19px;
+  margin-right:7px;
+  background:var(--accent);color:#fff;
+  font-family:var(--mono);font-size:10.5px;font-weight:700;
+  border-radius:2px;
+  vertical-align:1px;
+  flex:none;
+}
+.step{padding-top:18px;padding-bottom:18px;}
+.step br{line-height:2.4;}
+
+/* consecutive screenshots -> grid (each still click-to-zoom) */
+.figure-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px 20px;
+  margin:20px 0;
+  align-items:start;
+}
+.figure-grid figure{margin:0;}
+@media (max-width:960px){
+  .figure-grid{grid-template-columns:1fr;}
+}
+
+/* ---------- section pager ---------- */
+.pager{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:var(--rule);
+  border:1px solid var(--rule);
+  margin-top:88px;
+}
+.pager a{
+  display:block;
+  padding:18px 20px;
+  background:var(--surface);
+  text-decoration:none;color:inherit;
+  transition:background .12s var(--ease);
+}
+.pager a:hover{background:var(--accent-soft);}
+.pager .pg-dir{
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:4px;
+}
+.pager .pg-title{font-size:13.5px;font-weight:600;}
+.pager a.next{text-align:right;}
+.pager a.is-empty{pointer-events:none;background:var(--paper);}
+.pager a.is-empty .pg-title{color:var(--ink-3);font-weight:400;}
+
+/* ---------- back to top ---------- */
+#toTop{
+  position:fixed;right:26px;bottom:26px;
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  border:1px solid var(--rule-strong);border-radius:2px;
+  background:var(--surface);color:var(--ink-2);
+  cursor:pointer;
+  opacity:0;transform:translateY(6px);pointer-events:none;
+  transition:opacity .16s var(--ease),transform .16s var(--ease),border-color .12s var(--ease);
+  z-index:90;
+  font-size:15px;
+}
+#toTop.show{opacity:1;transform:none;pointer-events:auto;}
+#toTop:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ---------- breadcrumb strip ---------- */
+.crumb-bar{
+  position:sticky;top:var(--topbar);
+  z-index:80;
+  display:flex;align-items:center;gap:8px;
+  margin:0 0 30px;
+  padding:7px 0 7px 1px;
+  background:linear-gradient(var(--paper) 78%,rgba(251,250,247,0));
+  font-family:var(--mono);font-size:11px;
+  color:var(--ink-3);
+  letter-spacing:.02em;
+  margin-top:-14px;
+}
+.crumb-bar .cb-sep{color:var(--rule-strong);}
+.crumb-bar .cb-cur{color:var(--ink-2);}
+
+/* ---------- search overlay ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:200;
+  display:none;
+  background:rgba(22,24,28,.34);
+  backdrop-filter:blur(3px);
+  padding-top:12vh;
+}
+.overlay.open{display:block;animation:fadeIn .14s var(--ease);}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.palette{
+  width:min(660px,92vw);
+  margin:0 auto;
+  background:var(--surface);
+  border:1px solid var(--rule-strong);
+  border-radius:2px;
+  overflow:hidden;
+  animation:rise .16s var(--ease);
+}
+@keyframes rise{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+.palette-input{
+  width:100%;
+  padding:16px 20px;
+  border:none;border-bottom:1px solid var(--rule);
+  font-family:inherit;font-size:15px;color:var(--ink);
+  background:transparent;
+  outline:none;
+}
+.palette-input::placeholder{color:var(--ink-3);}
+.palette-hint{
+  display:flex;gap:14px;
+  padding:8px 20px;
+  border-bottom:1px solid var(--rule-2);
+  font-size:10.5px;color:var(--ink-3);
+  font-family:var(--mono);
+  background:var(--paper);
+}
+.palette-results{
+  max-height:min(54vh,440px);
+  overflow-y:auto;
+  padding:6px;
+}
+.palette-item{
+  display:block;
+  padding:10px 14px;
+  border-radius:2px;
+  text-decoration:none;color:inherit;
+  cursor:pointer;
+}
+.palette-item .pi-path{
+  font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+  margin-bottom:2px;
+}
+.palette-item .pi-title{font-size:13.5px;font-weight:600;}
+.palette-item .pi-snippet{
+  font-size:12px;color:var(--ink-2);margin-top:3px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.palette-item .pi-title em{
+  background:#FFF3C4;color:var(--ink);font-style:normal;font-weight:700;
+  padding:0 1px;
+}
+.palette-item .pi-snippet em{
+  background:#FFF3C4;color:var(--ink);font-style:normal;font-weight:600;
+}
+.palette-item.sel{background:var(--accent-soft);}
+.palette-item.sel .pi-title{color:var(--accent);}
+.palette-empty{
+  padding:28px 20px;text-align:center;
+  font-size:13px;color:var(--ink-3);
+}
+
+/* ---------- lightbox ---------- */
+.lightbox{
+  position:fixed;inset:0;z-index:210;
+  display:none;
+  background:rgba(18,20,24,.88);
+  padding:4vh 3vw;
+  cursor:zoom-out;
+}
+.lightbox.open{display:grid;place-items:center;animation:fadeIn .14s var(--ease);}
+.lightbox img{
+  max-width:100%;max-height:92vh;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:2px;
+  background:#fff;
+}
+.lightbox-cap{
+  position:absolute;left:0;right:0;bottom:14px;
+  text-align:center;
+  font-family:var(--mono);font-size:11.5px;
+  color:rgba(255,255,255,.62);
+}
+
+/* ---------- toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:34px;
+  transform:translate(-50%,10px);
+  padding:9px 16px;
+  background:var(--ink);color:#fff;
+  font-size:12.5px;
+  border-radius:2px;
+  opacity:0;pointer-events:none;
+  transition:opacity .16s var(--ease),transform .16s var(--ease);
+  z-index:300;
+}
+#toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* ---------- flashed target ---------- */
+@keyframes flashTarget{
+  0%{background:#FFF3C4;}
+  100%{background:transparent;}
+}
+.flash{animation:flashTarget 1.4s var(--ease);}
+
+/* ============================================================
+   Fallbacks — desktop-first, graceful below 1080px
+   ============================================================ */
+@media (max-width:1180px){
+  :root{--toc-w:240px;--measure:100%;}
+  main{padding:40px 36px 120px;}
+}
+
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr;}
+  .toc{
+    position:fixed;
+    top:var(--topbar);left:0;bottom:0;
+    width:288px;height:auto;
+    background:var(--paper);
+    border-right:1px solid var(--rule-strong);
+    transform:translateX(-100%);
+    transition:transform .2s var(--ease);
+    z-index:95;
+    box-shadow:none;
+  }
+  .toc.open{transform:none;}
+  .toc-toggle{
+    display:grid;place-items:center;
+    width:34px;height:34px;
+    border:1px solid var(--rule-strong);border-radius:2px;
+    background:var(--surface);color:var(--ink-2);
+    cursor:pointer;font-size:14px;
+    flex:none;
+  }
+  .brand-sub{display:none;}
+  .search-trigger{min-width:0;width:38px;padding:0;justify-content:center;}
+  .search-trigger .st-label,.search-trigger kbd{display:none;}
+  main{padding:32px 20px 110px;}
+  .meta-grid{grid-template-columns:1fr;}
+  .meta-cell{border-right:none;border-bottom:1px solid var(--rule-2);padding:11px 0;}
+  .meta-cell:last-child{border-bottom:none;}
+  .chapter-nav{grid-template-columns:1fr;}
+  .pager{grid-template-columns:1fr;}
+  .pager a.next{text-align:left;}
+  h2{font-size:22px;margin-top:56px;}
+  h3{font-size:17px;margin-top:42px;}
+  .crumb-bar{margin-top:-32px;}
+  tbody td:first-child{position:static;border-right:none;}
+  thead th:first-child{position:static;}
+}
+
+@media print{
+  .topbar,.toc,#toTop,#progress,.pager,.crumb-bar,.overlay,.lightbox{display:none!important;}
+  .shell{display:block;padding-top:0;}
+  main{padding:0;}
+  body{background:#fff;font-size:11pt;}
+  h2{page-break-before:always;}
+  h2:first-of-type{page-break-before:auto;}
+  .table-wrap,.step,.callout,figure{page-break-inside:avoid;}
+}
+
+</style>
+</head>
+<body>
+
+<div id="progress" style="width: 17.3133%;"></div>
+
+<header class="topbar">
+  <button class="toc-toggle" id="tocToggle" aria-label="目录">☰</button>
+  <div class="brand">
+    <span class="brand-mark">ES</span>
+    <span class="brand-name">Esunny易盛系统操作手册</span>
+    <span class="brand-sub">v9.3.8</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="search-trigger" id="searchTrigger" aria-label="搜索">
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"></circle><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+    <span class="st-label">搜索字段、操作、菜单路径…</span>
+    <kbd>Ctrl K</kbd>
+  </button>
+</header>
+
+<div class="shell">
+
+<nav class="toc" id="toc" aria-label="目录">
+  <div class="toc-head">
+    <span>目录</span>
+    <span class="toc-count">4 章 · 15 节</span>
+  </div>
+<div class="toc-chapter">
+<a class="toc-l1" href="#ch1"><span class="num">01</span><span>系统入门</span></a>
+<a class="toc-l2" href="#s11">1.1 登录</a>
+<a class="toc-l2" href="#s12">1.2 主界面与菜单</a>
+</div>
+<div class="toc-chapter">
+<a class="toc-l1 active" href="#ch2"><span class="num">02</span><span>客户资料录入</span></a>
+<a class="toc-l2 active" href="#s21">2.1 客户信息</a>
+<a class="toc-l2" href="#s22">2.2 客户银行</a>
+<a class="toc-l2" href="#s23">2.3 客户关系人</a>
+<a class="toc-l2" href="#s24">2.4 客户税务信息</a>
+</div>
+<div class="toc-chapter">
+<a class="toc-l1" href="#ch3"><span class="num">03</span><span>审核</span></a>
+<a class="toc-l2" href="#s31">3.1 审核入口</a>
+<a class="toc-l2" href="#s32">3.2 审核操作</a>
+<a class="toc-l2" href="#s33">3.3 客户资料修改通知</a>
+<a class="toc-l2" href="#s34">3.4 退回与重新提交</a>
+</div>
+<div class="toc-chapter">
+<a class="toc-l1" href="#ch4"><span class="num">04</span><span>日常维护操作</span></a>
+<a class="toc-l2" href="#s41">4.1 修改手续费（手续费模板）</a>
+<a class="toc-l2" href="#s42">4.2 调整可交易品种（品种组管理）</a>
+<a class="toc-l2" href="#s43">4.3 查看操作日志</a>
+<a class="toc-l2" href="#s44">4.4 查看邮件发送状态（邮件管理）</a>
+<a class="toc-l2" href="#s45">4.5 调整客户的交易平台与邮寄方法（分组客户）</a>
+</div>
+  <div class="toc-foot">
+    最后更新
+    <span class="ver">2026-10-23</span>
+  </div>
+</nav>
+
+<main>
+  <div class="article">
+
+    <div class="crumb-bar">
+      <span class="cb-ch">客户资料录入</span>
+      <span class="cb-sep">/</span>
+      <span class="cb-cur">2.1 客户信息</span>
+    </div>
+
+    <div class="doc-head">
+      <div class="doc-eyebrow">柜台上手手册 · 内部使用</div>
+      <h1>Esunny易盛系统操作手册</h1>
+      <dl class="meta-grid"><div class="meta-cell"><dt>适用对象</dt><dd>具有柜台系统经验、首次使用易盛开户录入系统的柜员</dd></div><div class="meta-cell"><dt>覆盖范围</dt><dd>自然人客户开户资料录入与审核、日常维护操作</dd></div><div class="meta-cell"><dt>客户端</dt><dd>易盛金融管理终端 9.3.8</dd></div></dl>
+      <div class="chapter-nav"><a class="chapter-card" href="#ch1"><span class="cc-num">01</span><span class="cc-body"><span class="cc-title">系统入门</span><span class="cc-desc">登录窗口字段与主界面菜单定位</span></span></a>
+<a class="chapter-card" href="#ch2"><span class="cc-num">02</span><span class="cc-body"><span class="cc-title">客户资料录入</span><span class="cc-desc">开户四步：客户信息 / 银行 / 关系人 / 税务</span></span></a>
+<a class="chapter-card" href="#ch3"><span class="cc-num">03</span><span class="cc-body"><span class="cc-title">审核</span><span class="cc-desc">待审核管理、审批动作、资料修改通知</span></span></a>
+<a class="chapter-card" href="#ch4"><span class="cc-num">04</span><span class="cc-body"><span class="cc-title">日常维护操作</span><span class="cc-desc">手续费、品种组、日志、邮件、分组客户</span></span></a></div>
+    </div>
+
+
+
+
+<h2 id="ch1" data-num="01" data-title="系统入门"><span class="h2-num">第 1 章</span>系统入门<a class="anchor" href="#ch1" aria-label="复制本节链接">#</a></h2>
+
+<h3 id="s11" data-num="1.1" data-title="登录"><span class="h3-num">1.1</span><span class="h3-t">登录</span><a class="anchor" href="#s11" aria-label="复制本节链接">#</a></h3>
+<p>启动「易盛金融管理终端」客户端（本手册以 9.3.8 版为准），在登录窗口录入以下信息：</p>
+<div class="table-wrap"><table><thead><tr><th>项目</th><th>说明</th></tr></thead><tbody><tr><td>用户编号</td><td>由公司统一开立，入职时申请</td></tr><tr><td>交易密码</td><td>与公司电脑密码一致</td></tr><tr><td>管理前置</td><td>默认配置，无需修改</td></tr><tr><td>SSL 加密</td><td><strong>不勾选</strong></td></tr><tr><td>记住密码</td><td>按个人习惯，公共电脑不建议勾选</td></tr></tbody></table></div>
+<p>点击【登录】进入系统。</p>
+<figure><img src="images/01-登录窗口.png" alt="登录窗口" data-caption="登录窗口" loading="lazy"><figcaption>登录窗口</figcaption></figure>
+<div class="callout callout--note"><span class="callout__label">注意</span>登录失败时，优先排查两项：密码是否与公司电脑密码同步；管理前置配置是否被改动。</div>
+
+<h3 id="s12" data-num="1.2" data-title="主界面与菜单"><span class="h3-num">1.2</span><span class="h3-t">主界面与菜单</span><a class="anchor" href="#s12" aria-label="复制本节链接">#</a></h3>
+<p>登录后进入欢迎页，顶部为系统功能菜单栏。菜单按功能划分——处理业务时先判定事项所属类别，再定位至对应菜单：</p>
+<figure><img src="images/02-主界面.png" alt="主界面" data-caption="主界面" loading="lazy"><figcaption>主界面</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>菜单</th><th>功能定位</th><th>常见场景</th></tr></thead><tbody><tr><td><strong>本地配置</strong></td><td>本机显示与操作习惯设置</td><td>调整列表显示、界面布局</td></tr><tr><td><strong>基础数据</strong></td><td>品种、币种、银行等主数据查询</td><td>查询可交易品种</td></tr><tr><td><strong>客户管理</strong></td><td>客户资料相关功能</td><td>开户录入、客户银行、关系人、税务信息</td></tr><tr><td><strong>参数管理</strong></td><td>费率模板与参数模板</td><td>客户手续费调整 → 手续费模板</td></tr></tbody></table></div>
+<p>其余菜单与开户环节关联较小，本手册仅在涉及处说明（审核使用 <code>其他信息 → 待审核管理</code>）。</p>
+
+<h2 id="ch2" data-num="02" data-title="客户资料录入"><span class="h2-num">第 2 章</span>客户资料录入<a class="anchor" href="#ch2" aria-label="复制本节链接">#</a></h2>
+
+<h3 id="s21" data-num="2.1" data-title="客户信息"><span class="h3-num">2.1</span><span class="h3-t">客户信息</span><a class="anchor" href="#s21" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>客户管理 → 客户信息</code>。打开后为客户列表页，点击顶部【<strong>增加</strong>】新建客户。</p>
+<figure><img src="images/03-客户信息列表.png" alt="客户信息列表页" data-caption="客户信息列表页" loading="lazy"><figcaption>客户信息列表页</figcaption></figure>
+<div class="callout callout--tip"><span class="callout__label">提示</span><strong>录入页结构</strong>：左侧三个页签——<strong>常用信息 → 基础信息 → 密码信息</strong>；常用信息页下方设"联系信息和证件信息"子表（地址 / 固话 / 传真 / 手机 / 邮箱 / 社交 / 证件 / 交易分组）。开户按此顺序逐页填写。</div>
+
+<h4>第一步：常用信息</h4>
+<figure><img src="images/04-常用信息.png" alt="常用信息页" data-caption="常用信息页" loading="lazy"><figcaption>常用信息页</figcaption></figure>
+<h4 class="badge-required">必填字段<span class="badge badge--required">必填</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th><th>备注</th></tr></thead><tbody><tr><td>客户账号</td><td>账户号码（唯一，界面红星标识）</td><td>—</td></tr><tr><td>账号简称</td><td>客户中文名</td><td><span style="color:#C0392B;font-weight:600;">上限 10 个中文字；超出时须与客户确认简称</span></td></tr><tr><td>账号全称</td><td>客户<strong>英文全称</strong>（= 英文名字）</td><td><span style="color:#C0392B;font-weight:600;">上限 100 位字符；超出时须先与业务部门确认缩写写法，并由业务部门取得客户确认后方可录入（例：99908602）</span></td></tr><tr><td>账号状态</td><td>新建时 <strong>N(正常)</strong>；仅当客户<strong>销户 / 休眠</strong>时变更</td><td><span style="color:#C0392B;font-weight:600;">变更时须同步修改「状态日期」</span></td></tr><tr><td>注册日期</td><td><strong>开户当天的日期</strong></td><td>—</td></tr><tr><td>状态日期</td><td>默认 2099-12-31</td><td><strong>改为销户 / 休眠的日期</strong>（即状态变更当天）</td></tr><tr><td>授权到期</td><td><strong>PI 到期日</strong></td><td>—</td></tr><tr><td>性别</td><td>按证件填写（证件页勾选"联动生日、性别"可自动带出）；<strong>公司选 I(不适用)</strong></td><td>生日见下「其他字段」</td></tr><tr><td>国籍</td><td>中国 = <strong>0(中国)</strong>；<strong>中国香港 / 中国澳门 / 中国台湾</strong>同样选 0(中国)</td><td><span style="color:#C0392B;font-weight:600;">此类客户的行政区须选择相应地区</span></td></tr><tr><td>换汇方式</td><td>2(电话确认)</td><td>—</td></tr><tr><td>保证金额度</td><td>按开户表格填写；<strong>开户表格未提供则默认 1M</strong></td><td>—</td></tr><tr><td>交易中心</td><td><strong>= 交易平台</strong>：SP → <strong>B</strong>、CQG → <strong>C</strong>；A(All)，按业务提供的开户表格选择</td><td><span style="color:#C0392B;font-weight:600;">选择对应交易中心后，交易分组必须联动勾选对应分组</span></td></tr><tr><td>行政区</td><td><strong>按国籍联动</strong>：中国 → <strong>M(大陆)</strong>；中国香港 / 澳门 / 台湾 → 选对应地区</td><td><span style="color:#C0392B;font-weight:600;">与国籍联动</span></td></tr></tbody></table></div>
+<h4 class="badge-conditional">其他字段（无框，按口径填写）<span class="badge badge--conditional">条件</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th></tr></thead><tbody><tr><td>英文全称</td><td>同「账号全称」，填客户<strong>英文名</strong></td></tr><tr><td>生日</td><td>按证件带出；<strong>公司则填公司注册日期</strong></td></tr><tr><td>账户属性</td><td><strong>S(同名实益账户)</strong></td></tr><tr><td>职业</td><td>格式：<strong>职位（公司名称）</strong></td></tr><tr><td>出生国家</td><td>按证件；<strong>公司填注册地</strong></td></tr><tr><td>居住/注册地</td><td><strong>与下方「地址」子表联动</strong>（国家 / 省份与地址一致）</td></tr><tr><td>投资者类型</td><td>默认 <strong>N(非 PI)</strong>；其他按开户表格选 A / B</td></tr><tr><td>主账号</td><td>若为 <strong>sub-account</strong>，填 <strong>Master account 的账户号码</strong>，系统自动联动</td></tr><tr><td>下单人区域</td><td>默认<strong>留空</strong></td></tr><tr><td>备注</td><td>姓名过长时在此填<strong>全称</strong>；亦记录 return mail、suspend reason 等信息</td></tr></tbody></table></div>
+<h4 class="badge-default">保持默认，请勿修改<span class="badge badge--default">默认</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>默认值</th></tr></thead><tbody><tr><td>代理类型</td><td><strong>C(Client)</strong></td></tr><tr><td>开仓比例</td><td><strong>0</strong></td></tr><tr><td>可用算法</td><td><strong>0</strong></td></tr><tr><td>主子账号</td><td><strong>N</strong></td></tr><tr><td>网上用户</td><td><strong>Y</strong></td></tr><tr><td>自成交类型</td><td><strong>N</strong></td></tr><tr><td>资金共享</td><td><strong>N</strong>（系统灰显）</td></tr></tbody></table></div>
+
+<h4 style="position: relative;">联系信息和证件信息（子表）</h4>
+<p><strong>地址</strong>——必填：地址类型（开户时全选）、国家、省份、详细地址；城市、邮编为非必填。</p>
+<figure><img src="images/07-地址.png" alt="地址子表" data-caption="地址子表" loading="lazy"><figcaption>地址子表</figcaption></figure>
+<p><strong>手机</strong>——必填：手机类型（TM短信电话 / TO开户电话 / TH其他电话，可全选）+ 手机号码。格式：含国家代码写作 <code>(86) 13500001234</code>；不含国家代码可录入多个，以逗号/分号/正斜杠分隔，<strong>首个手机号码用于接收短信</strong>。</p>
+<figure><img src="images/08-手机.png" alt="手机子表" data-caption="手机子表" loading="lazy"><figcaption>手机子表</figcaption></figure>
+<p><strong>邮箱</strong>——必填：邮箱类型（MB日账单邮箱 / MM月账单邮箱…）+ 邮箱地址。支持多个，以逗号分隔，<strong>所有邮箱均接收邮件</strong>。</p>
+<figure><img src="images/10-邮箱.png" alt="邮箱子表" data-caption="邮箱子表" loading="lazy"><figcaption>邮箱子表</figcaption></figure>
+<p><strong>证件</strong>——必填：证件类型（1内地身份证）、证件号码、发放地点（0中国），默认勾选"联动生日、性别"。<strong>永久身份证仅填到期日；非永久身份证须同时填写签发日期与到期日</strong>。</p>
+<figure><img src="images/11-证件.png" alt="证件子表" data-caption="证件子表" loading="lazy"><figcaption>证件子表</figcaption></figure>
+<p><strong>交易分组</strong>——勾选后点击 <code>&gt;&gt;</code> 移入"已分配分组"：001（LOGIN US…）为必选；DlystmEmai / DlystmMail / MthstmEmai / MthstmMail 视客户结单接收方式（邮寄/邮件）勾选；交易中心对应分组（如 CQG / SP 等）与交易中心联动，选了哪个交易中心即须勾选对应分组。</p>
+<figure><img src="images/12-交易分组.png" alt="交易分组子表" data-caption="交易分组子表" loading="lazy"><figcaption>交易分组子表</figcaption></figure>
+
+<h4>第二步：基础信息</h4>
+<figure><img src="images/05-基础信息.png" alt="基础信息页" data-caption="基础信息页" loading="lazy"><figcaption>基础信息页</figcaption></figure>
+<h4 class="badge-required">必填字段<span class="badge badge--required">必填</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th><th>备注</th></tr></thead><tbody><tr><td class="req">账号类型</td><td>按开户时的账户类型选择（个人 / 联名 / 公司）</td><td rowspan="2"><strong>与注册类型联动</strong>：个人/联名 → 账号类型选"个人"，注册类型个人 = 0(Local Individual)、联名 = 1(Local Joint)；公司 → 账号类型选"公司"，注册类型 = 2(Limited Co.)</td></tr><tr><td class="req">注册类型</td><td>与账号类型联动选择</td></tr><tr><td class="req">交易权限</td><td>0(正常交易)</td><td>—</td></tr><tr><td class="req">集合账户</td><td>N</td><td>—</td></tr><tr><td class="req">账单语言</td><td>4(繁体英文)</td><td>—</td></tr><tr><td class="req">结算分组</td><td>B001</td><td>AE code</td></tr><tr><td class="req">可交易品种组</td><td>默认 A(A)</td><td>—</td></tr><tr><td class="req">客户风险级别</td><td>按开户表格填写</td><td>—</td></tr><tr><td class="req">基础手续费</td><td>按开户表格填写</td><td>—</td></tr><tr><td class="req">基础保证金</td><td><strong>STD</strong></td><td>—</td></tr><tr><td class="req">基础利率</td><td>Default</td><td>—</td></tr><tr><td class="req">追保标准</td><td><strong>M</strong></td><td><mark>系统默认 G，需手动改为 M</mark></td></tr><tr><td class="req">FATCA 状态 / 签署日期 / 税表日期</td><td>按开户表格填写</td><td><mark>税表日期 = KYC DATE</mark></td></tr></tbody></table></div>
+<h4 class="badge-default">保持默认，请勿修改<span class="badge badge--default">默认</span></h4><p>账单类型 D(日账单)、保证金类型 N(净仓)。</p>
+
+<h4>第三步：密码信息</h4>
+<figure><img src="images/06-密码信息.png" alt="密码信息页" data-caption="密码信息页" loading="lazy"><figcaption>密码信息页</figcaption></figure>
+<p>登录权限 0(正常登录)、登录个数 3、密码状态 N(正常) 保持默认；「修改登录密码」系统默认是勾选状态，实测不正确，需<strong>取消勾选</strong>（反向勾选）。</p>
+
+<h4>第四步：保存（两步，缺一不可）</h4>
+<div class="step">
+<span class="step-num">1</span> 每个子表（地址 / 手机 / 邮箱 / 证件 / 交易分组）填写完毕，点击子表自身的【保存】。<br>
+<span class="step-num">2</span> 全部页签填写完毕后，点击录入页顶部【保存(S)】——整单方可生效。
+</div>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>关键提示</strong>：联系信息和证件信息保存之后，务必再点击客户信息的保存按钮，否则子表信息的保存不生效。勾选顶部"保存后跳转"后，保存成功将自动返回客户列表。</div>
+
+<h4>批量修改客户资料：必须使用「导出多表」</h4>
+<p>如需采用模版导出方式批量修改客户资料并重新导入，须在【导入导出】菜单中选择「<strong>导出多表</strong>」——客户信息由多张关联表构成，使用「导出单表」再导入将因表间关联缺失而报错。</p>
+<figure><img src="images/36-导出多表.png" alt="导出多表" style="max-width:260px;" data-caption="导出多表" loading="lazy"><figcaption>导出多表</figcaption></figure>
+<div class="callout callout--note"><span class="callout__label">注意</span>批量导入（uploader）通用规则：仅支持新增与修改，<strong>不支持删除</strong>——导入前请确认模版中未误改其他记录。</div>
+
+<h3 id="s22" data-num="2.2" data-title="客户银行"><span class="h3-num">2.2</span><span class="h3-t">客户银行</span><a class="anchor" href="#s22" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>客户管理 → 客户银行</code>。打开后为客户银行列表页，点击顶部【<strong>增加(A)</strong>】录入银行账户。</p>
+<figure><img src="images/15-客户银行列表.png" alt="客户银行列表页" data-caption="客户银行列表页" loading="lazy"><figcaption>客户银行列表页</figcaption></figure>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>前置条件</strong>：录入银行信息前，客户信息必须先<strong>审批通过</strong>（不只是保存），否则"客户账号"下拉无法选中该客户。</div>
+
+<h4>录入规则：一个账号 × 一个币种 = 一条记录</h4>
+<p>客户银行一次仅能录入一个账号的一个币种。同一客户持有 HKD、CNY、USD 等多个币种账户时，须逐条录入。</p>
+<div class="callout callout--tip"><span class="callout__label">提示</span><p><strong>多币种/多账户批量场景</strong>：先录入一条币种账户 → 经列表页顶部【批量导入 → 模版导出】导出 Excel 模版 → 利用已录入的信息在模版中新增其余记录 → 「文件导入」传回。</p><p>批量导入（uploader）仅支持新增与修改，不支持删除——使用前请确认模版中未误改其他记录。</p></div>
+<figure><img src="images/18-批量导入.png" alt="批量导入菜单" data-caption="批量导入菜单" loading="lazy"><figcaption>批量导入菜单</figcaption></figure>
+
+<h4>字段说明</h4>
+<figure><img src="images/17-客户银行录入.png" alt="客户银行录入页标注" data-caption="客户银行录入页标注" loading="lazy"><figcaption>客户银行录入页标注</figcaption></figure>
+<h4 class="badge-required">必填字段<span class="badge badge--required">必填</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th><th>备注</th></tr></thead><tbody><tr><td class="req">客户账号</td><td>下拉选择已创建的客户账号</td><td>无法选中即客户信息未审批通过，请返回 2.1 完成审批</td></tr><tr><td class="req">银行标识</td><td>下拉选择银行（如 ABC((222) 中国农业银行…）</td><td>—</td></tr><tr><td class="req">银行账户</td><td>客户银行卡号 / 账户号码</td><td>—</td></tr><tr><td class="req">账户币种</td><td>该账户的币种（HKD / CNY / USD…）</td><td>与本外币标示联动</td></tr><tr><td class="req">本外币账户标示</td><td>HKD、CNY = L(本币)；其他币种 = W(外币)</td><td>—</td></tr><tr><td class="req">是否境内账户标示</td><td>境内 = Y(境内)；境外 = N(境外)</td><td>按账户开户行所在地判定</td></tr></tbody></table></div>
+<h4 class="badge-required">日期字段——默认当日，全部改为 2099-12-31<span class="badge badge--required">必填</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th></tr></thead><tbody><tr><td class="req">账户到期日</td><td>改为 2099-12-31</td></tr><tr><td class="req">销户日期</td><td>改为 2099-12-31</td></tr><tr><td class="req">eDDA授权日期</td><td>改为 2099-12-31</td></tr><tr><td class="req">eDDA授权到期日</td><td>改为 2099-12-31</td></tr></tbody></table></div>
+<p>例外：遇下方"特殊银行记录"场景时，签约日期 / eDDA 日期按实际文件日期填写；普通开户无特别要求时一律改为 2099-12-31。</p>
+<h4 class="badge-default">其余字段——留空 / 保持默认<span class="badge badge--default">默认</span></h4><p>Bank Code、证件类型、证件号码、注册地、银行地址、签约状态、签约日期、eDDA授权状态 N(未授权)、eDDA转账限额/次数（默认 0）、开户人、开户支行。</p>
+
+<h4>保存</h4>
+<p>填写完毕点击顶部【保存(S)】。勾选"保存后跳转"则保存成功自动返回列表页，可继续录入下一币种。</p>
+
+<h4>特殊银行记录：Standing Approval 与 Third Party Designated Bank</h4>
+<p>旧系统迁移及日常业务中，存在客户与第三方之间的 Standing Approval 或 Third Party Designated Bank 安排。因系统限制，此类记录以特定字段组合标识业务含义，录法与普通银行账户不同。</p>
+<h4>类型一：Standing Approval</h4>
+<figure><img src="images/28-特殊记录-StandingApproval.png" alt="Standing Approval 示例" data-caption="Standing Approval 示例" loading="lazy"><figcaption>Standing Approval 示例</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>录法</th></tr></thead><tbody><tr><td>银行标识</td><td>OTHER(OTHER BANK)</td></tr><tr><td>银行账户</td><td><strong>STANDING APPROVAL</strong>（关键词，识别用途）</td></tr><tr><td>账户币种</td><td>MULTICCY(多币种)</td></tr><tr><td>开户人</td><td>第三方 / 产品名称（例：Samsung Bitcoin Futures Active ETF）</td></tr><tr><td>银行地址</td><td>用途说明（例：for security/ fund transfer between the given client &amp; third party）</td></tr><tr><td>签约状态</td><td>Y(签约成功)</td></tr><tr><td>签约日期</td><td>实际文件日期（覆盖默认 2099-12-31）</td></tr></tbody></table></div>
+<h4>类型二：Third Party Designated Bank</h4>
+<figure><img src="images/29-特殊记录-ThirdParty.png" alt="Third Party 示例" data-caption="Third Party 示例" loading="lazy"><figcaption>Third Party 示例</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>录法</th></tr></thead><tbody><tr><td>银行标识</td><td>指定银行正常选择（例：HSBC((004) 香港上海汇丰银行)）</td></tr><tr><td>银行账户</td><td>实际账号正常录入</td></tr><tr><td>账户币种 / 本外币标示</td><td>按实际币种及口径（例：JPY(日币) → W(外币)）</td></tr><tr><td>开户人</td><td>第三方名称（例：HTHK-HS JAPAN TOPIX 100 INDE）</td></tr><tr><td>签约状态 / 签约日期</td><td>Y(签约成功) / 实际文件日期</td></tr><tr><td>eDDA 相关日期</td><td>如有实际日期按实际填写</td></tr></tbody></table></div>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>关键提示</strong>：仅当「签约状态」选择 Y(签约成功) 时，签约日期方可成功保存；状态非 Y 时日期无法录入。</div>
+
+<h3 id="s23" data-num="2.3" data-title="客户关系人"><span class="h3-num">2.3</span><span class="h3-t">客户关系人</span><a class="anchor" href="#s23" aria-label="复制本节链接">#</a></h3>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>前置条件</strong>：录入关系人前，客户信息必须先<strong>审批通过</strong>，否则"客户账号"下拉无法选中该客户。</div>
+<p>菜单位置：<code>客户管理 → 客户关系人</code>。打开后为关系人列表页，点击顶部【<strong>增加(A)</strong>】录入。</p>
+<figure><img src="images/19-客户关系人列表.png" alt="客户关系人列表页" data-caption="客户关系人列表页" loading="lazy"><figcaption>客户关系人列表页</figcaption></figure>
+
+<h4>须录入关系人的账户类型</h4>
+<div class="table-wrap"><table><thead><tr><th>账户类型</th><th>须录入的关系人类型（点左侧名称 = 系统代码）</th></tr></thead><tbody><tr><td>个人户</td><td>
+    <div class="map-row"><span class="map-name">联名账户</span><span class="map-arrow">→</span><span class="map-code">U</span><span class="map-sys">联名账户</span></div>
+    <div class="map-row"><span class="map-name">授权人</span><span class="map-arrow">→</span><span class="map-code">A</span><span class="map-sys">委托交易人</span></div>
+  </td></tr><tr><td>公司户</td><td>
+    <div class="map-row"><span class="map-name">董事</span><span class="map-arrow">→</span><span class="map-code">D</span><span class="map-sys">董事</span></div>
+    <div class="map-row"><span class="map-name">UBO</span><span class="map-arrow">→</span><span class="map-code">B</span><span class="map-sys">最终受益人</span></div>
+    <div class="map-row"><span class="map-name">授权签字人</span><span class="map-arrow">→</span><span class="map-code">I</span><span class="map-sys">授权签字人</span></div>
+    <div class="map-row"><span class="map-name">授权交易员</span><span class="map-arrow">→</span><span class="map-code">T</span><span class="map-sys">指令下单人</span></div>
+  </td></tr></tbody></table></div>
+
+<h4>字段说明</h4>
+<figure><img src="images/21-客户关系人录入.png" alt="客户关系人录入页标注" data-caption="客户关系人录入页标注" loading="lazy"><figcaption>客户关系人录入页标注</figcaption></figure>
+<h4 class="badge-required">必填字段<span class="badge badge--required">必填</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th></tr></thead><tbody><tr><td class="req">客户账号</td><td>下拉选择已创建的客户账号</td></tr><tr><td class="req">关系人类型</td><td>按账户类型选择（见上表）</td></tr><tr><td class="req">关系人名称</td><td>关系人姓名</td></tr><tr><td class="req">关系人英文名称</td><td>关系人英文名</td></tr><tr><td class="req">关系类型</td><td>按实际情况选择（示例 OTHERS）</td></tr><tr><td class="req">关系人授权开始日</td><td>录入当日日期</td></tr><tr><td class="req">关系人授权到期日</td><td>2099-12-31</td></tr></tbody></table></div>
+<h4 class="badge-conditional">如有则录——客户提供即录入，未提供可留空<span class="badge badge--conditional">条件</span></h4>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th></tr></thead><tbody><tr><td>性别 / 证件类型 / 证件号</td><td>按关系人证件填写</td></tr><tr><td>证件到期日</td><td> 一旦录入证件类信息，证件到期日必须改为 2099-12-31</td></tr><tr><td>关系人生日</td><td>按实际填写</td></tr><tr><td>证件发行地 / 国籍</td><td>按实际选择</td></tr><tr><td>电话号码 / 手机号码 / 邮箱地址</td><td>按提供的信息填写</td></tr><tr><td>TIN税务号</td><td>有则填写</td></tr></tbody></table></div>
+<h4 class="badge-default">其余字段——保持默认<span class="badge badge--default">默认</span></h4><p>关系人FATCA状态 3(不适用)、有美国受益人 N(否)、有美国缴税义务 N(否)、关系人所在国家 N(无)、签署税表日期等，未提及的字段一律按默认处理。</p>
+
+<h4>保存</h4>
+<p>每位关系人录入一条、保存一次。填写完毕点击顶部【保存(S)】；勾选"保存后跳转"自动返回列表，继续录入下一位关系人。</p>
+
+<h3 id="s24" data-num="2.4" data-title="客户税务信息"><span class="h3-num">2.4</span><span class="h3-t">客户税务信息</span><a class="anchor" href="#s24" aria-label="复制本节链接">#</a></h3>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>重要性仅次于「客户信息」</strong>。税务信息（CRS 税收居民申报）属合规刚需，所有客户均须录入，漏录将直接影响账户申报。</div>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>前置条件</strong>：录入税务信息前，客户信息必须先<strong>审批通过</strong>，否则"客户账号"下拉无法选中该客户。</div>
+<p>菜单位置：<code>客户管理 → 客户税务信息</code>。打开后为列表页，点击顶部【<strong>增加(A)</strong>】录入。</p>
+<figure><img src="images/23-客户税务信息列表.png" alt="客户税务信息列表页" data-caption="客户税务信息列表页" loading="lazy"><figcaption>客户税务信息列表页</figcaption></figure>
+<h4>录入页字段</h4>
+<figure><img src="images/24-客户税务信息增加.png" alt="客户税务信息录入页" data-caption="客户税务信息录入页" loading="lazy"><figcaption>客户税务信息录入页</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>填写口径</th><th>备注</th></tr></thead><tbody><tr><td class="req">客户账号</td><td>下拉选择已创建的客户账号</td><td>—</td></tr><tr><td class="req">关系人名称</td><td>个人户：选客户本人；公司户：仅当 CRS 表格实体类别为 Passive NFFE（消极非金融实体）时选控权人，其他类别留空</td><td> 公司户 Passive NFFE 的控权人从 2.3 已录关系人中选择——须先录完关系人，方可录入税务信息</td></tr><tr><td class="req">居留司法辖区</td><td>该关系人的税收居民所在地（国家/地区）</td><td>按客户 CRS 自我声明表格填写</td></tr><tr><td class="req">税务编码</td><td>该辖区的纳税人识别号（TIN）</td><td>—</td></tr><tr><td>无法提供理由</td><td>客户无法提供 TIN 时选择对应原因</td><td>能提供 TIN 则留空</td></tr><tr><td>原因解释</td><td>选择"无法提供理由"后的补充说明</td><td>—</td></tr></tbody></table></div>
+<h4>保存</h4>
+<p>一个关系人 + 一个居留司法辖区 + 一个税务编码 = 一条记录。具有多重税收居民身份的客户须逐条录入。填写完毕点击【保存(S)】，勾选"保存后跳转"返回列表继续录入。</p>
+
+<h2 id="ch3" data-num="03" data-title="审核"><span class="h2-num">第 3 章</span>审核<a class="anchor" href="#ch3" aria-label="复制本节链接">#</a></h2>
+<p>全部录入/修改操作保存后，均进入待审核队列，由审核岗复核通过后正式生效。</p>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>录入与审核不得为同一人</strong>。若审核时选中包含本人提交的记录，【确认】键无法点击，系统提示"包含 X 条自己提交的，无法进行批量审核"。</div>
+
+<h3 id="s31" data-num="3.1" data-title="审核入口"><span class="h3-num">3.1</span><span class="h3-t">审核入口</span><a class="anchor" href="#s31" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>其他信息 → 待审核管理</code>。默认按当日日期查询，可调整开始/结束日期筛选。</p>
+<figure><img src="images/25-待审核管理列表.png" alt="待审核管理列表页" data-caption="待审核管理列表页" loading="lazy"><figcaption>待审核管理列表页</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>列</th><th>含义</th></tr></thead><tbody><tr><td>操作类型</td><td>A(新增) / M(修改)</td></tr><tr><td>操作内容</td><td>涉及的客户及资料（如 [客户账号:01100018]）</td></tr><tr><td>审核状态</td><td>N(未审核) / 审核通过 / 审核不通过</td></tr><tr><td>操作人 / 操作时间</td><td>录入人及其提交时间</td></tr></tbody></table></div>
+
+<h3 id="s32" data-num="3.2" data-title="审核操作"><span class="h3-num">3.2</span><span class="h3-t">审核操作</span><a class="anchor" href="#s32" aria-label="复制本节链接">#</a></h3>
+<p>双击打开一笔待审记录，进入详情页：</p>
+<figure><img src="images/26-审核详情页.png" alt="审核详情页" data-caption="审核详情页" loading="lazy"><figcaption>审核详情页</figcaption></figure>
+<ol>
+  <li><strong>被修改之处以红色高亮显示</strong>——审核员聚焦红字字段，对照开户表格核对即可。</li>
+  <li>底部为<strong>审批区</strong>：审核流号、协议名称、备注、【审核通过】【审核不通过】【撤回】。</li>
+</ol>
+<h4>核对要点</h4>
+<p>按团队核对清单执行，核对标准即第 2 章各节录入清单：</p>
+<div class="table-wrap"><table><thead><tr><th>审核对象</th><th>对照章节</th></tr></thead><tbody><tr><td>客户基本信息（三个页签 + 联系/证件子表）</td><td>2.1 客户信息</td></tr><tr><td>银行账户（币种、本外币/境内外标示、日期）</td><td>2.2 客户银行</td></tr><tr><td>关系人（类型是否齐全、证件到期日）</td><td>2.3 客户关系人</td></tr><tr><td>税务信息（关系人名称、辖区、TIN）</td><td>2.4 客户税务信息</td></tr></tbody></table></div>
+<h4>审批动作</h4>
+<div class="table-wrap"><table><thead><tr><th>动作</th><th>说明</th></tr></thead><tbody><tr><td>审核通过</td><td>备注可留空，单据生效</td></tr><tr><td>审核不通过</td><td><strong>备注必填</strong>——按实际情况写明退回原因，以备后续审计核查</td></tr><tr><td>撤回</td><td>仅操作人本人可撤回其提交的记录</td></tr></tbody></table></div>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>新开户先审后建</strong>：新开户须<strong>先审批通过「客户信息」</strong>，才能新增【客户银行】【客户税务信息】【客户关系人】——这三个子模块的"客户账号"下拉只会列出已审批通过的客户。若客户信息被撤回或审核不通过，下拉里就选不到该客户，需先走完客户信息审核流程。</div>
+<div class="callout callout--tip"><span class="callout__label">提示</span><strong>操作员自救</strong>：提交后若自行发现录入有误，无需等待审核退回——至<code>待审核管理</code>打开该笔详情页，点击底部【撤回】，修改后重新保存即可。</div>
+<p>亦可在列表页勾选多笔，使用顶部【审核通过】/【审核不通过】批量审批。</p>
+
+<h3 id="s33" data-num="3.3" data-title="客户资料修改通知"><span class="h3-num">3.3</span><span class="h3-t">客户资料修改通知</span><a class="anchor" href="#s33" aria-label="复制本节链接">#</a></h3>
+<p>客户资料修改并审核通过后，如需正式告知客户"资料已更新"，可在审核时勾选通知选项，由系统把资料修改通知发送给客户。</p>
+<h4>操作步骤</h4>
+<div class="step">
+<span class="step-num">1</span> 菜单位置：<code>其他信息 → 待审核管理</code>，找到该客户的修改申请（操作类型 <strong>M(修改)</strong>）。<br>
+<span class="step-num">2</span> 双击打开，进入审核详情页。<br>
+<span class="step-num">3</span> 勾选页面<strong>左上角</strong>的【<strong>发送资料修改通知</strong>】复选框（位置在选项卡下方、客户账号栏的上方）。<br>
+<span class="step-num">4</span> 核对无误后，点击页面底部【<strong>审核通过</strong>】——通知即发送给客户。
+</div>
+<figure><img src="images/26b-发送资料修改通知.png" alt="勾选发送资料修改通知" data-caption="勾选发送资料修改通知" loading="lazy"><figcaption>勾选发送资料修改通知</figcaption></figure>
+<div class="callout callout--tip"><span class="callout__label">提示</span>勾选与否只决定"是否给客户发通知"，不影响单据生效：不勾选时审核通过后单据照常生效，只是不发通知。通知是否已发出，可到 <code>其他信息 → 邮件管理</code> 核对（见 4.4）。</div>
+
+<h3 id="s34" data-num="3.4" data-title="退回与重新提交"><span class="h3-num">3.4</span><span class="h3-t">退回与重新提交</span><a class="anchor" href="#s34" aria-label="复制本节链接">#</a></h3>
+<div class="step">
+<span class="step-num">1</span> 审核不通过 → 单据在待审核管理中状态变更为「审核不通过」，备注载明退回原因。<br>
+<span class="step-num">2</span> 录入人按退回原因修改对应资料。<br>
+<span class="step-num">3</span> 重新保存 → 单据再次进入待审核队列，等待复审。
+</div>
+
+<h2 id="ch4" data-num="04" data-title="日常维护操作"><span class="h2-num">第 4 章</span>日常维护操作<a class="anchor" href="#ch4" aria-label="复制本节链接">#</a></h2>
+<p>本章覆盖开户后的日常任务——修改手续费、调整可交易品种、查询日志、查询邮件，按"会用"的颗粒度编写：入口 + 关键步骤 + 注意事项。</p>
+
+<h3 id="s41" data-num="4.1" data-title="修改手续费（手续费模板）"><span class="h3-num">4.1</span><span class="h3-t">修改手续费（手续费模板）</span><a class="anchor" href="#s41" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>参数管理 → 手续费模板</code>。</p>
+<p><strong>机制</strong>：每个客户开户时均被分配一个手续费模板编号（如 C0000、GC001…），修改某客户的手续费即修改其对应模板内容。若客户存在特殊手续费（专为客户而设），则为其新建专属模板（存量客户除外）。</p>
+<h4>操作步骤</h4>
+<div class="step">
+<span class="step-num">1</span> 查询该客户是否已分配专属模板编号（<code>客户管理 → 客户信息 → 基础信息 → 特殊手续费</code>）；若无，则为其新建模板。<br>
+<span class="step-num">2</span> 在手续费模板界面，通过【批量导入 → <strong>模版导出</strong>】导出该客户当前绑定的基础手续费模板。<br>
+<span class="step-num">3</span> 在导出的 Excel 中修改费率数值——模板已含成交来源、计算方式、币种等参数配置，无需另行指定。<br>
+<span class="step-num">4</span> 通过【批量导入 → <strong>文件导入</strong>】将修改后的模板导入系统。<br>
+<span class="step-num">5</span> 返回 <code>客户信息 → 基础信息 → 特殊手续费</code>，将该模板编号绑定至客户——<strong>完成绑定后新费率方可生效</strong>。
+</div>
+<figure><img src="images/31-手续费模板.png" alt="手续费模板界面" data-caption="手续费模板界面" loading="lazy"><figcaption>手续费模板界面</figcaption></figure>
+<div class="callout callout--note"><span class="callout__label">注意</span><strong>界面顶部三条注释</strong>：① 计算方式为空的行，保存时将被删除（默认模板 DEFAULT 的参数不允许删除）；② 锁仓比例与计算方式无关；③ 模板参数设置完成后，务必点击保存按钮方完成设置。</div>
+<div class="callout callout--risk"><span class="callout__label">风险</span><strong>品种代码可能多于一个</strong>：同一品种可能存在 F(Futures 期货) / O(Options 期权) 之分，或分属不同交易所。修改前务必确认目标行；不确定时请咨询业务侧或 <strong>ops_etd</strong>，切勿臆测。</div>
+
+<h3 id="s42" data-num="4.2" data-title="调整可交易品种（品种组管理）"><span class="h3-num">4.2</span><span class="h3-t">调整可交易品种（品种组管理）</span><a class="anchor" href="#s42" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>基础数据 → 品种组管理</code>。客户可交易的品种由其所属品种组决定（开户时在客户信息中指定品种组）。</p>
+<figure><img src="images/33-品种组管理.png" alt="品种组管理界面" data-caption="品种组管理界面" loading="lazy"><figcaption>品种组管理界面</figcaption></figure>
+<h4>界面三区</h4>
+<div class="table-wrap"><table><thead><tr><th>区域</th><th>内容</th></tr></thead><tbody><tr><td>左侧</td><td>分组编号列表（A、ACMENIY、ALL、STD…）</td></tr><tr><td>中间</td><td>已分配品种——该品种组当前包含的品种（交易所编码 + 品种类型 + 品种编号）</td></tr><tr><td>右侧</td><td>未分配品种——尚未归入该组的品种</td></tr></tbody></table></div>
+<h4>操作</h4>
+<div class="table-wrap"><table><thead><tr><th>操作</th><th>步骤</th></tr></thead><tbody><tr><td>分配（加入品种）</td><td>在右侧"未分配品种"勾选品种编号 → 点击下方【分配】</td></tr><tr><td>取消分配（移出品种）</td><td>在中间"已分配品种"勾选品种编号 → 点击下方【取消分配】</td></tr></tbody></table></div>
+<div class="callout callout--note"><span class="callout__label">注意</span>品种组修改须经审核——操作后进入待审核队列，复核通过方生效（见第 3 章）。请注意：改动品种组将影响所有使用该组的客户，操作前须确认影响范围。</div>
+
+<h3 id="s43" data-num="4.3" data-title="查看操作日志"><span class="h3-num">4.3</span><span class="h3-t">查看操作日志</span><a class="anchor" href="#s43" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>其他信息 → 操作日志</code>。用于查询操作痕迹，即"何人于何时修改了何种内容"。</p>
+<figure><img src="images/34-操作日志.png" alt="操作日志界面" data-caption="操作日志界面" loading="lazy"><figcaption>操作日志界面</figcaption></figure>
+<ul>
+  <li>按开始/结束日期圈定时间范围。</li>
+  <li>以日志类型筛选：9(登陆日志)、1(用户基础信息)、2(用户分配信息)、Z(其他日志，含导入导出记录)等。</li>
+  <li>关键列：客户账号（改动对象）、操作人、操作时间、日志内容（具体改动，如 Mod_Table / Add_Table 及字段变化）。</li>
+</ul>
+<div class="callout callout--tip"><span class="callout__label">提示</span>典型场景：客户资料被误改且无法确认操作人 → 输入客户账号与日期范围，按日志内容中的 Mod_Table 记录定位操作人。</div>
+
+<h3 id="s44" data-num="4.4" data-title="查看邮件发送状态（邮件管理）"><span class="h3-num">4.4</span><span class="h3-t">查看邮件发送状态（邮件管理）</span><a class="anchor" href="#s44" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>其他信息 → 邮件管理</code>。系统发出的全部邮件（结算单、资料更改通知等）均在此留痕。</p>
+<figure><img src="images/35-邮件管理.png" alt="邮件管理界面" data-caption="邮件管理界面" loading="lazy"><figcaption>邮件管理界面</figcaption></figure>
+<ul>
+  <li>按开始/结束日期查询。</li>
+  <li>关键列：发送类型（0结算单、7用户资料…）、接收人、发送状态（成功 = 绿✓）、客户账号、标题、操作时间。</li>
+  <li>发送状态：成功（绿✓）/ 发送中——"发送中"亦可能已成功送达，属正常状态。</li>
+</ul>
+<div class="callout callout--tip"><span class="callout__label">提示</span>需要重新发送时：勾选邮件 → 点击顶部【批量重发】。</div>
+
+<h3 id="s45" data-num="4.5" data-title="调整客户的交易平台与邮寄方法（分组客户）"><span class="h3-num">4.5</span><span class="h3-t">调整客户的交易平台与邮寄方法（分组客户）</span><a class="anchor" href="#s45" aria-label="复制本节链接">#</a></h3>
+<p>菜单位置：<code>操作员管理 → 分组客户</code>。客户的<strong>交易平台</strong>（归属哪个交易分组）和<strong>邮寄方法</strong>（结单及资料的寄送方式）都通过"把客户分配到对应分组"来管理。</p>
+<figure><img src="images/37-分组客户.png" alt="分组客户界面" data-caption="分组客户界面" loading="lazy"><figcaption>分组客户界面</figcaption></figure>
+<h4>界面三区</h4>
+<div class="table-wrap"><table><thead><tr><th style="width:16%">区域</th><th>内容</th></tr></thead><tbody><tr><td>左侧</td><td>分组列表：<strong>流水号 / 分组编号 / 分组类型 / 分组名称 / 操作人</strong>（如分组类型 A(交易分组)，分组名称 SP、CQG、DlyMail…）</td></tr><tr><td>中间</td><td><strong>已分配客户</strong>——该分组当前包含的客户（客户账号 / 客户简称）</td></tr><tr><td>右侧</td><td><strong>未分配客户</strong>——尚未归入该分组的客户</td></tr><tr><td>底部</td><td>分组编号 / 分组类型 / 分组名称 + 【增加】【删除】；两个列表下方为【分配】【取消分配】</td></tr></tbody></table></div>
+<h4>操作</h4>
+<div class="table-wrap"><table><thead><tr><th style="width:30%">操作</th><th>步骤</th></tr></thead><tbody><tr><td>分配（客户归入分组）</td><td>左侧选中目标分组 → 右侧"未分配客户"勾选客户 → 点下方【<strong>分配</strong>】</td></tr><tr><td>取消分配（客户移出分组）</td><td>左侧选中目标分组 → 中间"已分配客户"勾选客户 → 点下方【<strong>取消分配</strong>】</td></tr><tr><td>新建分组</td><td>底部填写分组编号、分组类型、分组名称 → 点【<strong>增加</strong>】</td></tr></tbody></table></div>
+<div class="callout callout--note"><span class="callout__label">注意</span>交易平台的分组名称与 2.1「交易中心」字段同源（<strong>SP → B、CQG → C</strong>）。动手前先确认<strong>分组类型</strong>，避免把客户错配到别的交易平台或别的邮寄方式。</div>
+
+    <nav class="pager" aria-label="章节翻页"><a class="prev" href="#s12"><div class="pg-dir">上一节</div><div class="pg-title">1.2 主界面与菜单</div></a><a class="next" href="#s22"><div class="pg-dir">下一节</div><div class="pg-title">2.2 客户银行</div></a></nav>
+
+  </div>
+</main>
+</div>
+
+<button id="toTop" aria-label="回到顶部" class="show">↑</button>
+
+<div class="overlay" id="overlay">
+  <div class="palette" role="dialog" aria-modal="true" aria-label="搜索手册">
+    <input class="palette-input" id="paletteInput" type="text" placeholder="搜索字段名、菜单路径、操作步骤…" autocomplete="off" spellcheck="false">
+    <div class="palette-hint"><span>↑↓ 选择</span><span>Enter 跳转</span><span>Esc 关闭</span></div>
+    <div class="palette-results" id="paletteResults"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img src="" alt="">
+  <div class="lightbox-cap"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   Esunny 操作手册 — interaction layer
+   No dependencies. No scrollIntoView (iframe-safe).
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var TOPBAR = 58;
+
+  /* ---------------- helpers ---------------- */
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+  function scrollToEl(el, extra) {
+    if (!el) return;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - (TOPBAR + (extra == null ? 14 : extra));
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }
+
+  var toastTimer;
+  function toast(msg) {
+    var t = $("#toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 1800);
+  }
+
+  /* ---------------- section model ---------------- */
+  // Build: [{id, num, title, chapter, el}]
+  var sections = [];
+  var chapters = [];
+
+  function buildModel() {
+    var main = $("main");
+    if (!main) return;
+    var chapterEl = null;
+    var chapterTitle = "";
+
+    $$("h2, h3", main).forEach(function (h) {
+      if (h.tagName === "H2") {
+        chapterEl = h;
+        chapterTitle = h.getAttribute("data-title") || h.textContent.trim();
+        chapters.push({ id: h.id, title: chapterTitle, el: h });
+      } else {
+        var num = h.getAttribute("data-num") || "";
+        var title = h.getAttribute("data-title") || h.textContent.trim();
+        sections.push({
+          id: h.id,
+          num: num,
+          title: title,
+          chapter: chapterTitle,
+          chapterId: chapterEl ? chapterEl.id : "",
+          el: h
+        });
+      }
+    });
+  }
+
+  /* ---------------- progress + active nav + breadcrumb ---------------- */
+  var tocLinks = {};
+  var crumbChapter, crumbSection;
+  var ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      updateProgress();
+      updateActive();
+      updateToTop();
+      ticking = false;
+    });
+  }
+
+  function updateProgress() {
+    var bar = $("#progress");
+    if (!bar) return;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? (window.pageYOffset / h) * 100 : 0;
+    bar.style.width = Math.min(100, Math.max(0, p)) + "%";
+  }
+
+  function currentSection() {
+    var probe = window.pageYOffset + TOPBAR + 90;
+    var found = null;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].el.offsetTop <= probe) found = sections[i];
+      else break;
+    }
+    if (!found && sections.length) found = sections[0];
+    return found;
+  }
+
+  function updateActive() {
+    var cur = currentSection();
+    if (!cur) return;
+    Object.keys(tocLinks).forEach(function (k) { tocLinks[k].classList.remove("active"); });
+    var active = tocLinks[cur.id];
+    if (active) {
+      active.classList.add("active");
+      var ch = tocLinks[cur.chapterId];
+      if (ch) ch.classList.add("active");
+      // keep the TOC item visible
+      var toc = $("#toc");
+      if (toc) {
+        var r = active.getBoundingClientRect();
+        var tr = toc.getBoundingClientRect();
+        if (r.top < tr.top + 40 || r.bottom > tr.bottom - 40) {
+          toc.scrollTop += r.top - tr.top - tr.height / 2;
+        }
+      }
+    }
+    if (crumbChapter) crumbChapter.textContent = cur.chapter;
+    if (crumbSection) crumbSection.textContent = (cur.num ? cur.num + " " : "") + cur.title;
+    document.title = (cur.num ? cur.num + " " : "") + cur.title + " · 易盛系统操作手册";
+  }
+
+  function updateToTop() {
+    var b = $("#toTop");
+    if (!b) return;
+    b.classList.toggle("show", window.pageYOffset > 640);
+  }
+
+  /* ---------------- pager ---------------- */
+  function buildPager() {
+    var pager = $(".pager");
+    if (!pager || !sections.length) return;
+    var last = sections[sections.length - 1];
+    var prev = null, next = null;
+
+    // derive from current hash or first section
+    var curId = (location.hash || "").replace("#", "");
+    var idx = sections.findIndex(function (s) { return s.id === curId; });
+
+    // pager shows a fixed "first / last" pair for the whole doc reading flow:
+    // we instead render two slots and update them on scroll
+    pager.innerHTML =
+      '<a class="prev is-empty" href="#"><div class="pg-dir">上一节</div><div class="pg-title">—</div></a>' +
+      '<a class="next is-empty" href="#"><div class="pg-dir">下一节</div><div class="pg-title">—</div></a>';
+
+    pager.__update = function () {
+      var cur = currentSection();
+      if (!cur) return;
+      var i = sections.indexOf(cur);
+      var p = sections[i - 1], n = sections[i + 1];
+      var aPrev = pager.querySelector(".prev"), aNext = pager.querySelector(".next");
+      if (p) {
+        aPrev.classList.remove("is-empty");
+        aPrev.href = "#" + p.id;
+        aPrev.querySelector(".pg-title").textContent = p.num + " " + p.title;
+      } else {
+        aPrev.classList.add("is-empty");
+        aPrev.href = "#";
+        aPrev.querySelector(".pg-title").textContent = "已到开头";
+      }
+      if (n) {
+        aNext.classList.remove("is-empty");
+        aNext.href = "#" + n.id;
+        aNext.querySelector(".pg-title").textContent = n.num + " " + n.title;
+      } else {
+        aNext.classList.add("is-empty");
+        aNext.href = "#";
+        aNext.querySelector(".pg-title").textContent = "已到末尾";
+      }
+    };
+    pager.__update();
+  }
+
+  /* ---------------- search index ---------------- */
+  var index = [];
+
+  function buildIndex() {
+    var main = $("main");
+    if (!main) return;
+    var curSection = null;
+    var curGroup = "";
+
+    $$("h2, h3, h4, tr, p, li", main).forEach(function (el) {
+      var tag = el.tagName;
+      if (tag === "H3") {
+        curSection = el;
+        curGroup = "";
+        index.push({
+          id: el.id,
+          path: (curSection.getAttribute("data-num") || ""),
+          title: el.getAttribute("data-title") || el.textContent.trim(),
+          text: "",
+          el: el,
+          kind: "section",
+          chapter: chapterOf(el)
+        });
+        return;
+      }
+      if (tag === "H2") { curGroup = ""; return; }
+      if (tag === "H4") {
+        curGroup = el.textContent.replace(/\s+/g, " ").trim();
+        return;
+      }
+      if (!curSection) return;
+
+      if (tag === "TR") {
+        var cells = $$("td, th", el);
+        if (!cells.length) return;
+        if (cells[0].tagName === "TH") return; // header row
+        var name = cells[0].textContent.replace(/\s+/g, " ").trim();
+        if (!name) return;
+        var body = cells.slice(1).map(function (c) { return c.textContent.replace(/\s+/g, " ").trim(); }).join(" ／ ");
+        index.push({
+          id: curSection.id,
+          path: sectionPath(curSection),
+          title: name,
+          text: body,
+          el: el,
+          row: el,
+          kind: "field",
+          group: curGroup
+        });
+        return;
+      }
+
+      var txt = el.textContent.replace(/\s+/g, " ").trim();
+      if (txt.length < 8) return;
+      index.push({
+        id: curSection.id,
+        path: sectionPath(curSection),
+        title: txt.slice(0, 46) + (txt.length > 46 ? "…" : ""),
+        text: txt,
+        el: el,
+        kind: "text"
+      });
+    });
+  }
+
+  function chapterOf(el) {
+    var prev = el.previousElementSibling;
+    while (prev) {
+      if (prev.tagName === "H2") return prev.getAttribute("data-title") || prev.textContent.trim();
+      prev = prev.previousElementSibling;
+    }
+    return "";
+  }
+
+  function sectionPath(h3) {
+    var num = h3.getAttribute("data-num") || "";
+    var ch = chapterOf(h3);
+    return (ch ? ch + " / " : "") + num + " " + (h3.getAttribute("data-title") || "").trim();
+  }
+
+  /* ---------------- search UI ---------------- */
+  var overlay, input, resultsBox, selIdx = -1, currentHits = [];
+
+  function openSearch() {
+    if (!overlay) return;
+    overlay.classList.add("open");
+    if (input) { input.value = ""; input.focus(); }
+    renderResults("");
+    // remember scroll lock
+    document.body.style.overflow = "hidden";
+  }
+  function closeSearch() {
+    if (!overlay) return;
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function score(item, q) {
+    var s = 0;
+    var t = item.title.toLowerCase();
+    var x = item.text.toLowerCase();
+    if (t === q) s += 100;
+    else if (t.indexOf(q) === 0) s += 80;
+    else if (t.indexOf(q) > -1) s += 55;
+    if (x.indexOf(q) > -1) s += 22;
+    // 类型加权只在确有文本命中时才叠加，否则全部条目都会被放行
+    if (s > 0) {
+      if (item.kind === "field") s += 14;
+      if (item.kind === "section") s += 10;
+    }
+    return s;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
+  }
+
+  function highlight(s, q) {
+    if (!q) return escapeHtml(s);
+    var i = s.toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return escapeHtml(s);
+    return escapeHtml(s.slice(0, i)) + "<em>" + escapeHtml(s.slice(i, i + q.length)) + "</em>" + escapeHtml(s.slice(i + q.length));
+  }
+
+  function renderResults(q) {
+    if (!resultsBox) return;
+    q = (q || "").trim();
+    selIdx = -1;
+
+    if (!q) {
+      // default: jump to chapters
+      currentHits = chapters.map(function (c) {
+        return { id: c.id, path: "章节", title: c.title, text: "", el: c.el };
+      });
+    } else {
+      var lq = q.toLowerCase();
+      currentHits = index
+        .map(function (it) { return { it: it, s: score(it, lq) }; })
+        .filter(function (o) { return o.s > 0; })
+        .sort(function (a, b) { return b.s - a.s; })
+        .slice(0, 24)
+        .map(function (o) { return o.it; });
+    }
+
+    if (!currentHits.length) {
+      resultsBox.innerHTML = '<div class="palette-empty">没有匹配「' + escapeHtml(q) + '」的内容</div>';
+      return;
+    }
+
+    resultsBox.innerHTML = currentHits.map(function (it, i) {
+      var snippet = it.text
+        ? highlight(it.text.slice(0, 120) + (it.text.length > 120 ? "…" : ""), q)
+        : "";
+      return '<a class="palette-item" data-i="' + i + '" href="#' + it.id + '">' +
+        '<div class="pi-path">' + escapeHtml(it.path || "") + '</div>' +
+        '<div class="pi-title">' + highlight(it.title, q) + '</div>' +
+        (snippet ? '<div class="pi-snippet">' + snippet + '</div>' : "") +
+        "</a>";
+    }).join("");
+
+    $$(".palette-item", resultsBox).forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        goHit(parseInt(a.getAttribute("data-i"), 10));
+      });
+    });
+  }
+
+  function goHit(i) {
+    var hit = currentHits[i];
+    if (!hit) return;
+    closeSearch();
+    setTimeout(function () {
+      var target = hit.el;
+      if (hit.row) {
+        scrollToEl(hit.row, 180);
+        hit.row.classList.remove("flash");
+        void hit.row.offsetWidth;
+        hit.row.classList.add("flash");
+      } else {
+        scrollToEl(target, 16);
+        if (target.tagName === "H2" || target.tagName === "H3") {
+          target.classList.remove("flash");
+          void target.offsetWidth;
+          target.classList.add("flash");
+        }
+      }
+      history.replaceState(null, "", "#" + hit.id);
+    }, 90);
+  }
+
+  function moveSel(delta) {
+    var items = $$(".palette-item", resultsBox);
+    if (!items.length) return;
+    selIdx = (selIdx + delta + items.length) % items.length;
+    items.forEach(function (el, i) { el.classList.toggle("sel", i === selIdx); });
+    var cur = items[selIdx];
+    if (cur) {
+      var box = resultsBox.getBoundingClientRect();
+      var r = cur.getBoundingClientRect();
+      if (r.top < box.top) resultsBox.scrollTop += r.top - box.top - 6;
+      else if (r.bottom > box.bottom) resultsBox.scrollTop += r.bottom - box.bottom + 6;
+    }
+  }
+
+  /* ---------------- lightbox ---------------- */
+  function setupLightbox() {
+    var lb = $("#lightbox");
+    if (!lb) return;
+    var img = lb.querySelector("img");
+    var cap = lb.querySelector(".lightbox-cap");
+
+    $$("figure img").forEach(function (im) {
+      im.addEventListener("click", function () {
+        img.src = im.src;
+        img.alt = im.alt || "";
+        if (cap) cap.textContent = im.getAttribute("data-caption") || im.alt || "";
+        lb.classList.add("open");
+        document.body.style.overflow = "hidden";
+      });
+    });
+
+    lb.addEventListener("click", function () {
+      lb.classList.remove("open");
+      document.body.style.overflow = "";
+    });
+  }
+
+  /* ---------------- anchors ---------------- */
+  function setupAnchors() {
+    $$("h2[id], h3[id]").forEach(function (h) {
+      var a = document.createElement("a");
+      a.className = "anchor";
+      a.href = "#" + h.id;
+      a.textContent = "#";
+      a.setAttribute("aria-label", "复制本节链接");
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var url = location.origin + location.pathname + "#" + h.id;
+        var done = function () { toast("已复制本节链接"); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done, function () { toast("复制失败，请手动复制：" + url); });
+        } else {
+          toast("本节链接：" + url);
+        }
+        history.replaceState(null, "", "#" + h.id);
+      });
+      h.appendChild(a);
+    });
+  }
+
+  /* ---------------- mobile toc drawer ---------------- */
+  function setupDrawer() {
+    var btn = $(".toc-toggle");
+    var toc = $("#toc");
+    if (!btn || !toc) return;
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      toc.classList.toggle("open");
+    });
+    document.addEventListener("click", function (e) {
+      if (!toc.classList.contains("open")) return;
+      if (toc.contains(e.target) || btn.contains(e.target)) return;
+      toc.classList.remove("open");
+    });
+    $$("a", toc).forEach(function (a) {
+      a.addEventListener("click", function () { toc.classList.remove("open"); });
+    });
+  }
+
+  /* ---------------- init ---------------- */
+  function init() {
+    buildModel();
+
+    $$("#toc a").forEach(function (a) {
+      var id = (a.getAttribute("href") || "").replace("#", "");
+      if (id) tocLinks[id] = a;
+    });
+    crumbChapter = $(".crumb-bar .cb-ch");
+    crumbSection = $(".crumb-bar .cb-cur");
+
+    buildPager();
+    buildIndex();
+    setupAnchors();
+    setupLightbox();
+    setupDrawer();
+
+    overlay = $("#overlay");
+    input = $("#paletteInput");
+    resultsBox = $("#paletteResults");
+
+    var trigger = $(".search-trigger");
+    if (trigger) trigger.addEventListener("click", openSearch);
+    if (overlay) {
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) closeSearch();
+      });
+    }
+    if (input) {
+      input.addEventListener("input", function () { renderResults(input.value); });
+    }
+
+    document.addEventListener("keydown", function (e) {
+      var open = overlay && overlay.classList.contains("open");
+      if ((e.key === "k" || e.key === "K") && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        open ? closeSearch() : openSearch();
+        return;
+      }
+      if (!open && e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) {
+        e.preventDefault();
+        openSearch();
+        return;
+      }
+      if (e.key === "Escape") {
+        if (open) closeSearch();
+        var lb = $("#lightbox");
+        if (lb && lb.classList.contains("open")) { lb.classList.remove("open"); document.body.style.overflow = ""; }
+      }
+      if (!open) return;
+      if (e.key === "ArrowDown") { e.preventDefault(); moveSel(1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); moveSel(-1); }
+      else if (e.key === "Enter") {
+        e.preventDefault();
+        if (selIdx >= 0) goHit(selIdx);
+        else if (currentHits.length) goHit(0);
+      }
+    });
+
+    var toTop = $("#toTop");
+    if (toTop) toTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+    // pager labels follow reading position
+    var pager = $(".pager");
+    if (pager && pager.__update) {
+      var pTick = false;
+      window.addEventListener("scroll", function () {
+        if (pTick) return;
+        pTick = true;
+        window.requestAnimationFrame(function () { pager.__update(); pTick = false; });
+      }, { passive: true });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    updateProgress();
+    updateActive();
+    updateToTop();
+
+    // honour deep link on load
+    if (location.hash) {
+      var el = document.getElementById(location.hash.slice(1));
+      if (el) setTimeout(function () { scrollToEl(el, 18); }, 60);
+    }
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+
+
+</body></html>
