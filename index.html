@@ -856,7 +856,7 @@ figcaption{
 </div>
   <div class="toc-foot">
     最后更新
-    <span class="ver">2026-10-23</span>
+    <span class="ver">2026-11-24</span>
   </div>
 </nav>
 
@@ -973,7 +973,7 @@ figcaption{
 <p>旧系统迁移及日常业务中，存在客户与第三方之间的 Standing Approval 或 Third Party Designated Bank 安排。因系统限制，此类记录以特定字段组合标识业务含义，录法与普通银行账户不同。</p>
 <h4>类型一：Standing Approval</h4>
 <figure><img src="images/28-特殊记录-StandingApproval.png" alt="Standing Approval 示例" data-caption="Standing Approval 示例" loading="lazy"><figcaption>Standing Approval 示例</figcaption></figure>
-<div class="table-wrap"><table><thead><tr><th>字段</th><th>录法</th></tr></thead><tbody><tr><td>银行标识</td><td>OTHER(OTHER BANK)</td></tr><tr><td>银行账户</td><td><strong>STANDING APPROVAL</strong>（关键词，识别用途）</td></tr><tr><td>账户币种</td><td>MULTICCY(多币种)</td></tr><tr><td>开户人</td><td>第三方 / 产品名称（例：Samsung Bitcoin Futures Active ETF）</td></tr><tr><td>银行地址</td><td>用途说明（例：for security/ fund transfer between the given client &amp; third party）</td></tr><tr><td>签约状态</td><td>Y(签约成功)</td></tr><tr><td>签约日期</td><td>实际文件日期（覆盖默认 2099-12-31）</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>录法</th></tr></thead><tbody><tr><td>银行标识</td><td>OTHER(OTHER BANK)</td></tr><tr><td>银行账户</td><td><strong>STANDING APPROVAL</strong>（关键词，识别用途）</td></tr><tr><td>账户币种</td><td>MULTICCY(多币种)</td></tr><tr><td>开户人</td><td>第三方 / 产品名称（例：Samsung Bitcoin Futures Active ETF）</td></tr><tr><td>银行地址</td><td>用途说明（例：for security/ fund transfer between the given client &amp; third party）</td></tr><tr><td>签约状态</td><td>Y(签约成功)</td></tr><tr><td>签约日期</td><td>LCD审批日期</td></tr><tr><td>账户到期日</td><td>2099-12-31</td></tr><tr><td>销户日期</td><td>2099-12-31</td></tr><tr><td>eDDA授权日期</td><td>2099-12-31</td></tr><tr><td>eDDA授权到期日</td><td>2099-12-31</td></tr></tbody></table></div>
 <h4>类型二：Third Party Designated Bank</h4>
 <figure><img src="images/29-特殊记录-ThirdParty.png" alt="Third Party 示例" data-caption="Third Party 示例" loading="lazy"><figcaption>Third Party 示例</figcaption></figure>
 <div class="table-wrap"><table><thead><tr><th>字段</th><th>录法</th></tr></thead><tbody><tr><td>银行标识</td><td>指定银行正常选择（例：HSBC((004) 香港上海汇丰银行)）</td></tr><tr><td>银行账户</td><td>实际账号正常录入</td></tr><tr><td>账户币种 / 本外币标示</td><td>按实际币种及口径（例：JPY(日币) → W(外币)）</td></tr><tr><td>开户人</td><td>第三方名称（例：HTHK-HS JAPAN TOPIX 100 INDE）</td></tr><tr><td>签约状态 / 签约日期</td><td>Y(签约成功) / 实际文件日期</td></tr><tr><td>eDDA 相关日期</td><td>如有实际日期按实际填写</td></tr></tbody></table></div>
